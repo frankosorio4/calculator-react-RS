@@ -212,19 +212,30 @@
                     return;
                 }
 
+                //allow initial negative sign
+                if (input === '-' && operation === '') {
+                    setOperation(`${input}`);
+                    return;
+                }
+
                 if (input === 'CE') {
                     setResult('');
                     setOperation(operation.slice(0, -1));
                     return;
                 }
-
-                if (input === "=" && !operation.endsWith(',') && !operation.endsWith('+') && !operation.endsWith('-') && !operation.endsWith('*') && !operation.endsWith('/')) {
+                // symbols at the end not allowed nor empty strings
+                if (input === "=" && operation != '' && !operation.endsWith(',') && !operation.endsWith('+') && !operation.endsWith('-') && !operation.endsWith('*') && !operation.endsWith('/')) {
                     const operationResult = eval(
                         operation.replace(/,/g, '.').replace(/ /g, ''));
                     const parseResult = operationResult.toString()?.replace(/\./g, ',');
                     setResult(parseResult);
                     updateHistory(operation, parseResult);
                     return;
+                }
+                else {
+                    if (input === '=') {
+                        return;
+                    }
                 }
 
                 if (result) {
@@ -240,9 +251,27 @@
                     return;
                 }
 
-                if (input != '=') {
-                    setOperation(`${operation}${input}`)
+                //not simbols at the begining
+                if (operation === '' && isNaN(parseInt(input))) {
+                    setOperation('');
+                    setResult('');
+                    return;
                 }
+
+                //not repeted simbols
+                if (isNaN(parseInt(operation.slice(-1))) && isNaN(parseInt(input))) {
+                    //change initial symbol
+                    if (operation === '-' && (input === '-' || input === '+')) {
+                        setOperation('');
+                        return;
+                    }
+                    const tempOperation = operation.slice(0, -1);
+                    setOperation(`${tempOperation}${input}`);
+                    return;
+                }
+
+                setOperation(`${operation}${input}`)
+
             }
 
             return (
