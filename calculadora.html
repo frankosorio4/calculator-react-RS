@@ -230,12 +230,17 @@
                 }
                 // symbols at the end not allowed nor empty strings
                 if (input === "=" && operation != '' && !operation.endsWith(',') && !operation.endsWith('+') && !operation.endsWith('-') && !operation.endsWith('*') && !operation.endsWith('/')) {
-                    const operationResult = eval(
-                        operation.replace(/,/g, '.').replace(/ /g, ''));
-                    const parseResult = operationResult.toString()?.replace(/\./g, ',');
-                    setResult(parseResult);
-                    updateHistory(operation, parseResult);
-                    return;
+                    try {
+                        const operationResult = eval(
+                            operation.replace(/,/g, '.').replace(/ /g, ''));
+                        const parseResult = operationResult.toString()?.replace(/\./g, ',');
+                        setResult(parseResult);
+                        updateHistory(operation, parseResult);
+                        return;
+                    } catch (error) {
+                        console.log('It\'s not possible to perform this operation.');
+                        return;
+                    }
                 }
                 else {
                     if (input === '=') {
